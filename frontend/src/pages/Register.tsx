@@ -10,7 +10,6 @@ const Register = () => {
     password: '',
     confirmPassword: '',
     contact_phone: '',
-    user_type: 'customer',
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
