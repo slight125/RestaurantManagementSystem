@@ -42,7 +42,14 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         );
       }
       
-      return [...prevCart, { ...item, quantity: 1 }];
+      // Ensure price is a number
+      const normalizedItem = {
+        ...item,
+        price: typeof item.price === 'string' ? parseFloat(item.price) : item.price,
+        quantity: 1
+      };
+      
+      return [...prevCart, normalizedItem];
     });
   };
 
@@ -68,7 +75,10 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const getTotal = () => {
-    return cart.reduce((total, item) => total + item.price * item.quantity, 0);
+    return cart.reduce((total, item) => {
+      const price = typeof item.price === 'string' ? parseFloat(item.price) : item.price;
+      return total + price * item.quantity;
+    }, 0);
   };
 
   const getItemCount = () => {

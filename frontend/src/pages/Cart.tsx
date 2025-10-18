@@ -12,6 +12,12 @@ const Cart = () => {
   const [deliveryAddress, setDeliveryAddress] = useState('');
 
   const handleCheckout = async () => {
+    if (!user) {
+      alert('Please login to place an order');
+      navigate('/login');
+      return;
+    }
+
     if (!deliveryAddress.trim()) {
       alert('Please enter a delivery address');
       return;
@@ -19,19 +25,22 @@ const Cart = () => {
 
     setLoading(true);
     try {
-      // Create order
+      // Create order with proper type conversion
       const orderData = {
         user_id: user?.id,
         total: getTotal(),
         delivery_address: deliveryAddress,
         status: 'Pending',
         payment_method: 'Cash',
-        items: cart.map((item) => ({
-          menu_item_id: item.id,
-          quantity: item.quantity,
-          price: item.price,
-          subtotal: item.price * item.quantity,
-        })),
+        items: cart.map((item) => {
+          const price = typeof item.price === 'string' ? parseFloat(item.price) : item.price;
+          return {
+            menu_item_id: item.id,
+            quantity: item.quantity,
+            price: price,
+            subtotal: price * item.quantity,
+          };
+        }),
       };
 
       await orderAPI.create(orderData);
@@ -39,6 +48,7 @@ const Cart = () => {
       alert('Order placed successfully!');
       navigate('/');
     } catch (err) {
+      console.error('Checkout error:', err);
       alert('Failed to place order. Please try again.');
     } finally {
       setLoading(false);
@@ -138,7 +148,11 @@ const Cart = () => {
         }}>
           {/* Cart Items */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            {cart.map((item) => (
+            {cart.map((item) => {
+              const itemPrice = typeof item.price === 'string' ? parseFloat(item.price) : item.price;
+              const itemTotal = itemPrice * item.quantity;
+              
+              return (
               <div
                 key={item.id}
                 style={{
@@ -180,7 +194,7 @@ const Cart = () => {
                       {item.name}
                     </h3>
                     <p style={{ color: '#6b7280', fontSize: '0.875rem' }}>
-                      KSh {item.price.toFixed(2)}
+                      KSh {itemPrice.toFixed(2)}
                     </p>
                   </div>
 
@@ -259,7 +273,7 @@ const Cart = () => {
                       color: '#111827',
                       marginBottom: '0.375rem'
                     }}>
-                      KSh {(item.price * item.quantity).toFixed(2)}
+                      KSh {itemTotal.toFixed(2)}
                     </p>
                     <button
                       onClick={() => removeFromCart(item.id)}
@@ -284,7 +298,8 @@ const Cart = () => {
                   </div>
                 </div>
               </div>
-            ))}
+            );
+            })}
           </div>
 
           {/* Order Summary */}
