@@ -136,8 +136,8 @@ const Navbar = () => {
 
             {/* Desktop Right Side - Hidden on mobile */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }} className="hide-mobile">
-            {/* Cart Icon - Available for all users except admins */}
-            {(!isAuthenticated || !isAdmin) && (
+            {/* Cart Icon - Available for all users */}
+            {isAuthenticated && (
               <Link
                 to="/cart"
                 style={{ 
@@ -276,7 +276,7 @@ const Navbar = () => {
           {/* Mobile Right Side - Cart + Hamburger - Shown only on mobile */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }} className="show-mobile">
             {/* Mobile Cart */}
-            {(!isAuthenticated || !isAdmin) && (
+            {isAuthenticated && (
               <Link
                 to="/cart"
                 onClick={closeMobileMenu}
