@@ -1,9 +1,11 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 const AdminSidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { logout, user } = useAuth();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const menuItems = [
@@ -24,8 +26,7 @@ const AdminSidebar = () => {
 
   const handleLogout = () => {
     if (confirm('Are you sure you want to logout?')) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
+      logout();
       navigate('/login');
     }
   };
@@ -208,8 +209,12 @@ const AdminSidebar = () => {
               e.currentTarget.style.borderColor = '#334155';
             }}
           >
-            <p style={{ fontSize: '0.85rem', fontWeight: '600', margin: 0, color: '#f1f5f9' }}>👤 Admin User</p>
-            <p style={{ fontSize: '0.7rem', color: '#94a3b8', margin: '0.25rem 0 0 0' }}>admin@restaurant.com</p>
+            <p style={{ fontSize: '0.85rem', fontWeight: '600', margin: 0, color: '#f1f5f9' }}>
+              👤 {user?.full_name || 'Admin User'}
+            </p>
+            <p style={{ fontSize: '0.7rem', color: '#94a3b8', margin: '0.25rem 0 0 0' }}>
+              {user?.email || 'admin@restaurant.com'}
+            </p>
           </Link>
         )}
         
