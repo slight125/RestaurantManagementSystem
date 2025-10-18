@@ -24,13 +24,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src"],
-  "exclude": [
-    "src/pages/AdminAnalytics.tsx",
-    "src/pages/AdminUsersPage.tsx",
-    "src/pages/admin/**",
-    "src/components/Sidebar.tsx",
-    "src/app/**",
-    "src/features/**"
-  ]
+  "include": ["src"]
 }

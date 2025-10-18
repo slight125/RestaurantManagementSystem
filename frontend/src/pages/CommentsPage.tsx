@@ -1,6 +1,13 @@
 import { useState, useEffect } from 'react';
 
-const mockComments = [
+interface Comment {
+  id: number;
+  user: string;
+  message: string;
+  date: string;
+}
+
+const mockComments: Comment[] = [
   {
     id: 1,
     user: "Mwikali Njeri",
@@ -22,7 +29,7 @@ const mockComments = [
 ];
 
 export default function CommentsPage() {
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState<Comment[]>([]);
 
   useEffect(() => {
     setComments(mockComments);

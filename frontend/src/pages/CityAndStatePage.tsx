@@ -1,6 +1,13 @@
 import { useState, useEffect } from 'react';
 
-const mockCities = [
+interface City {
+  id: number;
+  city: string;
+  state: string;
+  population: string;
+}
+
+const mockCities: City[] = [
   { id: 1, city: "Nairobi", state: "Nairobi County", population: "4.4M" },
   { id: 2, city: "Mombasa", state: "Mombasa County", population: "1.2M" },
   { id: 3, city: "Kisumu", state: "Kisumu County", population: "610K" },
@@ -8,7 +15,7 @@ const mockCities = [
 ];
 
 export default function CityAndStatePage() {
-  const [cities, setCities] = useState([]);
+  const [cities, setCities] = useState<City[]>([]);
 
   useEffect(() => {
     setCities(mockCities);

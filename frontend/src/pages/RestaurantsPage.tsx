@@ -1,13 +1,20 @@
 import { useState, useEffect } from 'react';
 
-const mockRestaurants = [
+interface Restaurant {
+  id: number;
+  name: string;
+  location: string;
+  cuisine: string;
+}
+
+const mockRestaurants: Restaurant[] = [
   { id: 1, name: "TamuTamu Kitchen", location: "Nairobi", cuisine: "Swahili Fusion" },
   { id: 2, name: "Hustle Bites", location: "Laikipia", cuisine: "Grill & Fast Food" },
   { id: 3, name: "The Garden Table", location: "Nyeri", cuisine: "Vegetarian Delight" },
 ];
 
 export default function RestaurantsPage() {
-  const [restaurants, setRestaurants] = useState([]);
+  const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
 
   useEffect(() => {
     setRestaurants(mockRestaurants);

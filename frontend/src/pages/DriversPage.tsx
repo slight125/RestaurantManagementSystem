@@ -1,6 +1,14 @@
 import { useState, useEffect } from 'react';
 
-const mockDrivers = [
+interface Driver {
+  id: number;
+  name: string;
+  status: string;
+  location: string;
+  ordersCompleted: number;
+}
+
+const mockDrivers: Driver[] = [
   { id: 1, name: "Amina Kariuki", status: "Available", location: "Nairobi CBD", ordersCompleted: 125 },
   { id: 2, name: "Joseph Mwangi", status: "On Delivery", location: "Westlands", ordersCompleted: 89 },
   { id: 3, name: "Lucy Wanjiku", status: "Offline", location: "Kasarani", ordersCompleted: 57 },
@@ -8,7 +16,7 @@ const mockDrivers = [
 ];
 
 export default function DriversPage() {
-  const [drivers, setDrivers] = useState([]);
+  const [drivers, setDrivers] = useState<Driver[]>([]);
 
   useEffect(() => {
     setDrivers(mockDrivers);

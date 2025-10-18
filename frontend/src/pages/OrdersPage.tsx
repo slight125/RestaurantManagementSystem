@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const OrdersPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [meal, setMeal] = useState(location.state?.meal || null);
+  const [meal] = useState(location.state?.meal || null);
 
   useEffect(() => {
     if (!meal) {
