@@ -8,9 +8,13 @@ import Loading from '../../components/Loading';
 
 const AdminMeals = () => {
   const [meals, setMeals] = useState<MenuItem[]>([]);
+  const [filteredMeals, setFilteredMeals] = useState<MenuItem[]>([]);
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [editingMeal, setEditingMeal] = useState<MenuItem | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterRestaurant, setFilterRestaurant] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -24,6 +28,25 @@ const AdminMeals = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    let filtered = [...meals];
+    
+    if (searchQuery) {
+      filtered = filtered.filter(meal =>
+        meal.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        meal.description?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+    
+    if (filterRestaurant) {
+      filtered = filtered.filter(meal => 
+        meal.restaurant_id?.toString() === filterRestaurant
+      );
+    }
+    
+    setFilteredMeals(filtered);
+  }, [meals, searchQuery, filterRestaurant]);
+
   const fetchData = async () => {
     try {
       const [mealsRes, restaurantsRes] = await Promise.all([
@@ -31,12 +54,44 @@ const AdminMeals = () => {
         restaurantAPI.getAll(),
       ]);
       setMeals(mealsRes.data);
+      setFilteredMeals(mealsRes.data);
       setRestaurants(restaurantsRes.data);
     } catch (err) {
       console.error('Failed to fetch data:', err);
     } finally {
       setLoading(false);
     }
+  };
+
+  const getRestaurantName = (restaurantId?: number) => {
+    if (!restaurantId) return 'No Restaurant';
+    const restaurant = restaurants.find(r => r.id === restaurantId);
+    return restaurant?.name || 'Unknown';
+  };
+
+  const handleOpenModal = (meal?: MenuItem) => {
+    if (meal) {
+      setEditingMeal(meal);
+      setFormData({
+        name: meal.name,
+        description: meal.description || '',
+        price: meal.price.toString(),
+        image: meal.image || '',
+        ingredients: meal.ingredients || '',
+        restaurant_id: meal.restaurant_id?.toString() || '',
+      });
+    } else {
+      setEditingMeal(null);
+      setFormData({
+        name: '',
+        description: '',
+        price: '',
+        image: '',
+        ingredients: '',
+        restaurant_id: '',
+      });
+    }
+    setShowModal(true);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -49,8 +104,14 @@ const AdminMeals = () => {
         restaurant_id: formData.restaurant_id ? parseInt(formData.restaurant_id) : null,
       };
 
-      await mealAPI.create(mealData);
+      if (editingMeal) {
+        await mealAPI.update(editingMeal.id, mealData);
+      } else {
+        await mealAPI.create(mealData);
+      }
+      
       setShowModal(false);
+      setEditingMeal(null);
       setFormData({
         name: '',
         description: '',
@@ -61,7 +122,7 @@ const AdminMeals = () => {
       });
       fetchData();
     } catch (err) {
-      alert('Failed to add meal');
+      alert(editingMeal ? 'Failed to update meal' : 'Failed to add meal');
     }
   };
 
@@ -82,14 +143,52 @@ const AdminMeals = () => {
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Manage Menu Items</h1>
-          <Button onClick={() => setShowModal(true)}>
-            Add New Meal
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Manage Menu Items</h1>
+            <p className="text-gray-600 mt-1">Total: {filteredMeals.length} items</p>
+          </div>
+          <Button onClick={() => handleOpenModal()}>
+            ➕ Add New Meal
           </Button>
         </div>
 
+        {/* Search and Filter */}
+        <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                🔍 Search Menu Items
+              </label>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search by name or description..."
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                🏪 Filter by Restaurant
+              </label>
+              <select
+                value={filterRestaurant}
+                onChange={(e) => setFilterRestaurant(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              >
+                <option value="">All Restaurants</option>
+                {restaurants.map((restaurant) => (
+                  <option key={restaurant.id} value={restaurant.id}>
+                    {restaurant.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {meals.map((meal) => (
+          {filteredMeals.map((meal) => (
             <Card key={meal.id}>
               {meal.image && (
                 <img
@@ -104,32 +203,63 @@ const AdminMeals = () => {
               
               <div className="p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">{meal.name}</h3>
-                <p className="text-gray-600 text-sm mb-2">{meal.description}</p>
+                <p className="text-xs text-gray-500 mb-2 flex items-center">
+                  🏪 {getRestaurantName(meal.restaurant_id)}
+                </p>
+                <p className="text-gray-600 text-sm mb-2 line-clamp-2">{meal.description}</p>
+                {meal.ingredients && (
+                  <p className="text-xs text-gray-500 mb-2">
+                    🥗 {meal.ingredients}
+                  </p>
+                )}
                 <p className="text-lg font-bold text-primary-600 mb-4">
                   KSh {meal.price != null ? Number(meal.price).toFixed(2) : 'N/A'}
                 </p>
                 
-                <Button
-                  variant="danger"
-                  onClick={() => handleDelete(meal.id)}
-                  className="w-full text-sm"
-                >
-                  Delete
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => handleOpenModal(meal)}
+                    className="flex-1 text-sm bg-blue-600 hover:bg-blue-700"
+                  >
+                    ✏️ Edit
+                  </Button>
+                  <Button
+                    variant="danger"
+                    onClick={() => handleDelete(meal.id)}
+                    className="flex-1 text-sm"
+                  >
+                    🗑️ Delete
+                  </Button>
+                </div>
               </div>
             </Card>
           ))}
         </div>
 
-        {meals.length === 0 && (
-          <div className="text-center py-12">
+        {filteredMeals.length === 0 && meals.length === 0 && (
+          <div className="text-center py-12 bg-white rounded-lg shadow">
+            <div className="text-6xl mb-4">🍽️</div>
             <p className="text-gray-600 text-lg">No meals found. Add your first meal!</p>
+          </div>
+        )}
+
+        {filteredMeals.length === 0 && meals.length > 0 && (
+          <div className="text-center py-12 bg-white rounded-lg shadow">
+            <div className="text-6xl mb-4">🔍</div>
+            <p className="text-gray-600 text-lg">No meals match your search criteria.</p>
           </div>
         )}
       </div>
 
-      {/* Add Meal Modal */}
-      <Modal isOpen={showModal} onClose={() => setShowModal(false)} title="Add New Meal">
+      {/* Add/Edit Meal Modal */}
+      <Modal 
+        isOpen={showModal} 
+        onClose={() => {
+          setShowModal(false);
+          setEditingMeal(null);
+        }} 
+        title={editingMeal ? 'Edit Menu Item' : 'Add New Menu Item'}
+      >
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -215,12 +345,15 @@ const AdminMeals = () => {
 
           <div className="flex space-x-3 pt-4">
             <Button type="submit" className="flex-1">
-              Add Meal
+              {editingMeal ? '💾 Update Meal' : '➕ Add Meal'}
             </Button>
             <Button
               type="button"
               variant="secondary"
-              onClick={() => setShowModal(false)}
+              onClick={() => {
+                setShowModal(false);
+                setEditingMeal(null);
+              }}
               className="flex-1"
             >
               Cancel

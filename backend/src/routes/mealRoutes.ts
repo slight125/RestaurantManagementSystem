@@ -71,6 +71,48 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
   }
 });
 
+// PUT/UPDATE a meal
+router.put('/:id', async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params;
+  const {
+    name,
+    description = '',
+    price,
+    image = '',
+    ingredients = '',
+    restaurant_id = null,
+    category_id = null
+  } = req.body;
+
+  if (!name || typeof price !== 'number') {
+    res.status(400).json({ error: 'Name and numeric price are required' });
+    return;
+  }
+
+  try {
+    const result = await pool.query(
+      `
+      UPDATE menu_items 
+      SET name = $1, description = $2, price = $3, image = $4, 
+          ingredients = $5, restaurant_id = $6, category_id = $7
+      WHERE id = $8
+      RETURNING *;
+      `,
+      [name, description, price, image, ingredients, restaurant_id, category_id, id]
+    );
+
+    if (result.rows.length === 0) {
+      res.status(404).json({ error: 'Meal not found' });
+      return;
+    }
+
+    res.json(result.rows[0]);
+  } catch (err: any) {
+    console.error('❌ Error updating meal:', err.message);
+    res.status(500).json({ error: 'Failed to update meal' });
+  }
+});
+
 // DELETE a meal
 router.delete('/:id', async (req: Request, res: Response) => {
   const { id } = req.params;

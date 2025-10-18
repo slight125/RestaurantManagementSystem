@@ -56,6 +56,7 @@ export const mealAPI = {
   getAll: () => api.get('/meals'),
   getById: (id: number) => api.get(`/meals/${id}`),
   create: (data: any) => api.post('/meals', data),
+  update: (id: number, data: any) => api.put(`/meals/${id}`, data),
   delete: (id: number) => api.delete(`/meals/${id}`),
 };
 
