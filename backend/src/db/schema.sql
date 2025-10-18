@@ -132,9 +132,9 @@ INSERT INTO cities (name, state, country) VALUES
 
 -- Insert sample admin user (password: admin123)
 INSERT INTO users (full_name, email, password, user_type, contact_phone) VALUES
-('Admin User', 'admin@restaurant.com', '$2a$10$8K5UqQ8qF0DxGbQQQnZv5.VX0q0j5p4vJZzQBXqxQKHQ5Qz5QZQ5e', 'admin', '+254700000000'),
-('John Doe', 'john@example.com', '$2a$10$8K5UqQ8qF0DxGbQQQnZv5.VX0q0j5p4vJZzQBXqxQKHQ5Qz5QZQ5e', 'customer', '+254711111111'),
-('Jane Smith', 'jane@example.com', '$2a$10$8K5UqQ8qF0DxGbQQQnZv5.VX0q0j5p4vJZzQBXqxQKHQ5Qz5QZQ5e', 'customer', '+254722222222');
+('Admin User', 'admin@restaurant.com', '$2b$10$Yb6A.PJBA7SUTbYlvp8Z1uJ2dwG4pk8wfSxx3KuzyKVgxFTHHv/CW', 'admin', '+254700000000'),
+('John Doe', 'john@example.com', '$2b$10$Yb6A.PJBA7SUTbYlvp8Z1uJ2dwG4pk8wfSxx3KuzyKVgxFTHHv/CW', 'customer', '+254711111111'),
+('Jane Smith', 'jane@example.com', '$2b$10$Yb6A.PJBA7SUTbYlvp8Z1uJ2dwG4pk8wfSxx3KuzyKVgxFTHHv/CW', 'customer', '+254722222222');
 
 -- Insert sample restaurants
 INSERT INTO restaurants (name, location, city_id, cuisine, contact_phone, rating) VALUES
