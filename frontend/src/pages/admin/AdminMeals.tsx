@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import { mealAPI, restaurantAPI } from '../../services/api';
 import type { MenuItem, Restaurant } from '../../types';
-import Card from '../../components/Card';
-import Button from '../../components/Button';
 import Modal from '../../components/Modal';
 import Loading from '../../components/Loading';
 
@@ -401,12 +399,7 @@ const AdminMeals = () => {
           setShowModal(false);
           setEditingMeal(null);
         }} 
-        title={
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">{editingMeal ? '✏️' : '➕'}</span>
-            <span>{editingMeal ? 'Edit Menu Item' : 'Add New Menu Item'}</span>
-          </div>
-        }
+        title={editingMeal ? '✏️ Edit Menu Item' : '➕ Add New Menu Item'}
       >
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Meal Name */}
