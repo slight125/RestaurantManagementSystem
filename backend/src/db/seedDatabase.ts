@@ -1,12 +1,8 @@
 import pkg from 'pg';
 const { Pool } = pkg;
 import dotenv from 'dotenv';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
+import { join } from 'path';
 import { readFileSync } from 'fs';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 dotenv.config();
 
@@ -24,7 +20,7 @@ async function seedDatabase() {
     console.log('🌱 Starting database seeding...');
     
     // Read the seed SQL file
-    const seedSQL = readFileSync(join(__dirname, 'seed.sql'), 'utf-8');
+    const seedSQL = readFileSync(join(__dirname, '..', '..', 'src', 'db', 'seed.sql'), 'utf-8');
     
     // Execute the seed SQL
     await client.query(seedSQL);
