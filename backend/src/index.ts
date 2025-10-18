@@ -18,23 +18,9 @@ import db from './db/db';
 dotenv.config();
 const app = express();
 
-// CORS configuration for production
+// CORS configuration - Allow all origins for now
 app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps, Postman, etc.)
-    if (!origin) return callback(null, true);
-    
-    // Allow all Vercel domains and localhost
-    if (
-      origin.includes('vercel.app') ||
-      origin.includes('localhost') ||
-      origin === process.env.FRONTEND_URL
-    ) {
-      callback(null, true);
-    } else {
-      callback(null, true); // Allow all origins in production for now
-    }
-  },
+  origin: true,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
