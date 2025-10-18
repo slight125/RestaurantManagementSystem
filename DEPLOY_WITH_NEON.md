@@ -59,14 +59,17 @@ pnpm run seed
    - Choose `RestaurantManagementSystem`
    - Click **Import**
 
-3. **Configure Project**:
+3. **Configure Project** ⚠️ **IMPORTANT**:
    ```
    Framework Preset: Vite
-   Root Directory: frontend
-   Build Command: npm run build
+   Root Directory: frontend          ← CRITICAL: Must be "frontend"!
+   Build Command: pnpm run build
    Output Directory: dist
-   Install Command: npm install
+   Install Command: pnpm install
    ```
+   
+   **⚠️ WARNING**: If you don't set Root Directory to `frontend`, 
+   deployment will fail with TypeScript errors!
 
 4. **Add Environment Variable**:
    ```
@@ -87,9 +90,16 @@ pnpm run seed
 
 2. **Import Same Repository**:
    - Select `RestaurantManagementSystem` again
-   - This time set **Root Directory: backend**
+   - This time set **Root Directory: backend** ← **IMPORTANT!**
+   
+3. **Configure** ⚠️ **IMPORTANT**:
+   ```
+   Root Directory: backend           ← Must be "backend"!
+   Build Command: pnpm run build
+   Install Command: pnpm install
+   ```
 
-3. **Add Environment Variables**:
+4. **Add Environment Variables**:
    
    **Important: Add these 3 variables:**
    
