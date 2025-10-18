@@ -42,58 +42,94 @@ const AdminDashboard = () => {
   if (loading) return <Loading />;
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb', padding: '2rem' }}>
+    <div style={{ 
+      minHeight: '100vh', 
+      backgroundColor: '#f9fafb', 
+      padding: '1rem' 
+    }}>
       <div style={{ maxWidth: '80rem', margin: '0 auto' }}>
-        <h1 style={{ fontSize: '2rem', fontWeight: 'bold', color: '#111827', marginBottom: '2rem' }}>
-          📊 Admin Dashboard
-        </h1>
+        <div style={{ 
+          backgroundColor: 'white', 
+          borderRadius: '0.75rem', 
+          boxShadow: '0 1px 3px rgba(0,0,0,0.1)', 
+          padding: '1.5rem',
+          marginBottom: '2rem'
+        }}>
+          <h1 style={{ 
+            fontSize: 'clamp(1.5rem, 4vw, 2rem)', 
+            fontWeight: 'bold', 
+            color: '#111827' 
+          }}>
+            📊 Admin Dashboard
+          </h1>
+          <p style={{ color: '#6b7280', marginTop: '0.5rem', fontSize: '0.875rem' }}>
+            Welcome to your restaurant management system
+          </p>
+        </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          <Card className="p-6">
+        <div style={{ marginBottom: '3rem' }}>
+          <h2 style={{ 
+            fontSize: 'clamp(1.25rem, 3vw, 1.5rem)', 
+            fontWeight: 'bold', 
+            color: '#111827', 
+            marginBottom: '1rem' 
+          }}>
+            📈 Statistics
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+          <Card className="p-4 sm:p-6">
             <div className="flex items-center">
-              <div className="text-4xl mr-4">📦</div>
+              <div className="text-3xl sm:text-4xl mr-3 sm:mr-4">📦</div>
               <div>
-                <p className="text-gray-600 text-sm">Total Orders</p>
-                <p className="text-3xl font-bold text-primary-600">{stats.totalOrders}</p>
+                <p className="text-gray-600 text-xs sm:text-sm">Total Orders</p>
+                <p className="text-2xl sm:text-3xl font-bold text-primary-600">{stats.totalOrders}</p>
               </div>
             </div>
           </Card>
 
-          <Card className="p-6">
+          <Card className="p-4 sm:p-6">
             <div className="flex items-center">
-              <div className="text-4xl mr-4">🏪</div>
+              <div className="text-3xl sm:text-4xl mr-3 sm:mr-4">🏪</div>
               <div>
-                <p className="text-gray-600 text-sm">Restaurants</p>
-                <p className="text-3xl font-bold text-green-600">{stats.totalRestaurants}</p>
+                <p className="text-gray-600 text-xs sm:text-sm">Restaurants</p>
+                <p className="text-2xl sm:text-3xl font-bold text-green-600">{stats.totalRestaurants}</p>
               </div>
             </div>
           </Card>
 
-          <Card className="p-6">
+          <Card className="p-4 sm:p-6">
             <div className="flex items-center">
-              <div className="text-4xl mr-4">👥</div>
+              <div className="text-3xl sm:text-4xl mr-3 sm:mr-4">👥</div>
               <div>
-                <p className="text-gray-600 text-sm">Total Users</p>
-                <p className="text-3xl font-bold text-blue-600">{stats.totalUsers}</p>
+                <p className="text-gray-600 text-xs sm:text-sm">Total Users</p>
+                <p className="text-2xl sm:text-3xl font-bold text-blue-600">{stats.totalUsers}</p>
               </div>
             </div>
           </Card>
 
-          <Card className="p-6">
+          <Card className="p-4 sm:p-6">
             <div className="flex items-center">
-              <div className="text-4xl mr-4">🍽️</div>
+              <div className="text-3xl sm:text-4xl mr-3 sm:mr-4">🍽️</div>
               <div>
-                <p className="text-gray-600 text-sm">Menu Items</p>
-                <p className="text-3xl font-bold text-orange-600">{stats.totalMeals}</p>
+                <p className="text-gray-600 text-xs sm:text-sm">Menu Items</p>
+                <p className="text-2xl sm:text-3xl font-bold text-orange-600">{stats.totalMeals}</p>
               </div>
             </div>
           </Card>
         </div>
+        </div>
 
         {/* Management Links */}
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Management</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <h2 style={{ 
+          fontSize: 'clamp(1.25rem, 3vw, 1.5rem)', 
+          fontWeight: 'bold', 
+          color: '#111827', 
+          marginBottom: '1rem' 
+        }}>
+          🎯 Management
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           <Link to="/admin/orders">
             <Card hover className="p-6 text-center cursor-pointer">
               <div className="text-5xl mb-4">📦</div>
