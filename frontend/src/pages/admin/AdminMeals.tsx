@@ -174,56 +174,89 @@ const AdminMeals = () => {
           </div>
         </div>
 
-        {/* Modern Search and Filter Section */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8 border border-gray-100">
+        {/* Enhanced Search and Filter Section */}
+        <div className="bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-xl p-6 sm:p-8 mb-8 border-2 border-gray-100">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-10 h-10 bg-gradient-to-r from-red-500 to-orange-500 rounded-xl flex items-center justify-center shadow-lg">
+              <span className="text-2xl">🔎</span>
+            </div>
+            <h2 className="text-xl font-bold text-gray-800">Search & Filter</h2>
+          </div>
+          
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Search Input */}
             <div className="group">
-              <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
-                <span className="text-xl">🔍</span>
+              <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-3">
+                <span className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center text-sm">🔍</span>
                 <span>Search Menu Items</span>
               </label>
               <div className="relative">
+                <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-2xl pointer-events-none">
+                  🔎
+                </div>
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search by name or description..."
-                  className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 transition-all text-gray-900 placeholder-gray-400"
+                  placeholder="Type to search by name or description..."
+                  className="w-full pl-14 pr-12 py-4 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 transition-all text-gray-900 placeholder-gray-400 bg-white shadow-sm hover:shadow-md font-medium"
                 />
-                <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl">
-                  🔎
-                </span>
                 {searchQuery && (
                   <button
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-red-500 transition-colors"
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-red-100 hover:bg-red-200 rounded-full flex items-center justify-center text-red-600 font-bold transition-all hover:scale-110"
+                    title="Clear search"
                   >
                     ✕
                   </button>
                 )}
               </div>
+              {searchQuery && (
+                <p className="mt-2 text-xs text-gray-600 flex items-center gap-1">
+                  <span>💡</span>
+                  <span>Searching for: <strong>"{searchQuery}"</strong></span>
+                </p>
+              )}
             </div>
             
+            {/* Restaurant Filter */}
             <div className="group">
-              <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-3">
-                <span className="text-xl">🏪</span>
+              <label className="flex items-center gap-2 text-sm font-bold text-gray-700 mb-3">
+                <span className="w-6 h-6 bg-orange-100 rounded-lg flex items-center justify-center text-sm">🏪</span>
                 <span>Filter by Restaurant</span>
               </label>
-              <select
-                value={filterRestaurant}
-                onChange={(e) => setFilterRestaurant(e.target.value)}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 transition-all text-gray-900 bg-white cursor-pointer"
-              >
-                <option value="">All Restaurants ({meals.length} items)</option>
-                {restaurants.map((restaurant) => {
-                  const count = meals.filter(m => m.restaurant_id === restaurant.id).length;
-                  return (
-                    <option key={restaurant.id} value={restaurant.id}>
-                      {restaurant.name} ({count} items)
-                    </option>
-                  );
-                })}
-              </select>
+              <div className="relative">
+                <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-2xl pointer-events-none">
+                  🏪
+                </div>
+                <select
+                  value={filterRestaurant}
+                  onChange={(e) => setFilterRestaurant(e.target.value)}
+                  className="w-full pl-14 pr-4 py-4 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-red-500 focus:ring-4 focus:ring-red-100 transition-all text-gray-900 bg-white cursor-pointer appearance-none shadow-sm hover:shadow-md font-medium"
+                  style={{
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23dc2626'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'right 0.75rem center',
+                    backgroundSize: '1.5em 1.5em'
+                  }}
+                >
+                  <option value="">All Restaurants ({meals.length} items)</option>
+                  {restaurants.map((restaurant) => {
+                    const count = meals.filter(m => m.restaurant_id === restaurant.id).length;
+                    return (
+                      <option key={restaurant.id} value={restaurant.id}>
+                        {restaurant.name} ({count} items)
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+              {filterRestaurant && (
+                <p className="mt-2 text-xs text-gray-600 flex items-center gap-1">
+                  <span>💡</span>
+                  <span>Showing: <strong>{restaurants.find(r => r.id.toString() === filterRestaurant)?.name}</strong></span>
+                </p>
+              )}
             </div>
           </div>
           
