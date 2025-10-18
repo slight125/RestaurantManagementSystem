@@ -100,4 +100,11 @@ app.post('/api/login', async (req, res) => {
 
 // 🟢 Server Start
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🟢 Backend running at http://localhost:${PORT}`));
+
+// Only start the server if not running on Vercel
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => console.log(`🟢 Backend running at http://localhost:${PORT}`));
+}
+
+// Export for Vercel serverless
+export default app;
