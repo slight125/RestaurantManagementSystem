@@ -19,35 +19,24 @@ dotenv.config();
 const app = express();
 
 // CORS configuration for production
-const allowedOrigins = [
-  'http://localhost:5173',
-  'http://localhost:3000',
-  'https://*.vercel.app',
-  process.env.FRONTEND_URL || '',
-].filter(Boolean);
-
 app.use(cors({
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps, Postman, etc.)
     if (!origin) return callback(null, true);
     
-    // Check if origin matches any allowed origin or wildcard pattern
-    const isAllowed = allowedOrigins.some(allowed => {
-      if (allowed.includes('*')) {
-        const pattern = new RegExp(allowed.replace(/\*/g, '.*'));
-        return pattern.test(origin);
-      }
-      return allowed === origin;
-    });
-    
-    if (isAllowed) {
+    // Allow all Vercel domains and localhost
+    if (
+      origin.includes('vercel.app') ||
+      origin.includes('localhost') ||
+      origin === process.env.FRONTEND_URL
+    ) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(null, true); // Allow all origins in production for now
     }
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
